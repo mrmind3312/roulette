@@ -27,7 +27,7 @@
     "autoprefixer": "^10.4.19",
     "chromedriver": "^106.0.1",
     "eslint-config-prettier": "^8.5.0",
-    "nightwatch": "^2.3.9",
+    "nightwatch": "^3.6.4",
     "postcss": "^8.4.39",
     "prettier": "^2.7.1",
     "tailwindcss": "^3.4.6"
