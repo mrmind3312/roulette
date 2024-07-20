@@ -29,7 +29,10 @@ export const apiService = {
       body,
       headers: getHeaders(),
       onResponse(context) {
-        setToken(context.response.headers.get('authorization'))
+        const token = context.response.headers.get('authorization')
+        if (token) {
+          setToken(token)
+        }
       }
     });
 
