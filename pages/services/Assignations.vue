@@ -1,18 +1,22 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import dayjs from 'dayjs';
+
 import { useUsersStore } from '~/stores/users'
-import { useHoursStore } from '~/stores/hours'
 import { useAvailabilitiesStore } from '~/stores/users/availabilities'
+import { useServicesStore } from '~/stores/services'
 
 const runtimeConfig = useRuntimeConfig();
 const usersStore = useUsersStore();
-const hoursStore = useHoursStore();
 const availabilitiesStore = useAvailabilitiesStore();
+const servicesStore = useServicesStore();
 
 const currentWeek = ref(getCurrentWeek())
 const initalWeekNumber = getWeekNumber(currentWeek.value)
+const weeks = ref([])
 
 const daysOfWeek = runtimeConfig.public.days
+const months = runtimeConfig.public.months
 
 function getCurrentWeek() {
   const today = new Date()
@@ -42,12 +46,33 @@ function previousWeek() {
   }
 }
 
+function hoursOfTheDay(dayIndex) {
+  if (!servicesStore.service) {
+    return []
+  }
+
+  return servicesStore.service.hours.filter(hour => {
+    return hour.day == dayIndex
+  })
+}
+
+const monthLabel = computed(() => {
+  return months[currentWeek.value.getMonth()]
+})
+
+function getMonthDay(dayOfWeek, weekNumber) {
+  const date = dayjs().startOf('year').add(getWeekNumber(currentWeek.value) - 1, 'week').add(dayOfWeek, 'day');
+  return date.format('D');
+}
+
 function getAvailability(day, hour) {
   const availability = availabilitiesStore.availabilities.find(availability => {
-    return availability.catalog_hours_id == hour.id && availability.day == day &&
+    return availability.catalog_hours_id == hour.id &&
+      availability.day == day &&
       availability.week == getWeekNumber(currentWeek.value) &&
       availability.month == currentWeek.value.getMonth() &&
-      availability.year == currentWeek.value.getFullYear()
+      availability.year == currentWeek.value.getFullYear() &&
+      availability.services_id == servicesStore.service.id
   })
 
   return availability
@@ -79,41 +104,62 @@ async function toggleAvailability(day, hour) {
 }
 
 onMounted(() => {
-  hoursStore.getHours()
-  availabilitiesStore.getAvailabilities(usersStore.user.id)
+  for (let i = -5; i <= 5; i++) {
+    const newDate = new Date(currentWeek.value.getTime());
+    newDate.setDate(newDate.getDate() + (i * 7));
+    weeks.value.push(newDate);
+  }
+
+  servicesStore.getServices();
+  availabilitiesStore.getAllAvailabilities(usersStore.user.id)
 })
 
 </script>
 <template>
-  <div class="container mx-auto p-4">
-    <div class="flex justify-between mb-4">
-      <strong>{{ formatWeekLabel(currentWeek) }}</strong>
-      <button @click="nextWeek"
-              class="btn">Siguiente Semana</button>
-      <button @click="previousWeek"
-              class="btn">Semana Anterior</button>
-    </div>
+  <div>
+    <header class="flex justify-between items-center py-4">
+      <div class="flex items-center space-x-4">
+        <label class="block">
+          <strong class="text-sm text-gray-600">Servicio:</strong>
+          <select v-model="servicesStore.service"
+                  class="form-select ml-2">
+            <option v-for="service in servicesStore.services"
+                    :key="service.name"
+                    :value="service">{{ service.name }}</option>
+          </select>
+        </label>
+
+        <label class="block">
+          <strong class="text-sm text-gray-600">Semana:</strong>
+          <select v-model="currentWeek"
+                  class="form-select ml-2">
+            <option v-for="week in weeks"
+                    :key="week.getDate()"
+                    :value="week">{{ formatWeekLabel(week) }}</option>
+          </select>
+        </label>
+      </div>
+      <div class="flex items-center">
+        <span class="text-lg font-bold">{{ `${usersStore.user.name} (${usersStore.user.email})` }}</span>
+      </div>
+    </header>
     <div class="grid grid-cols-4 gap-4">
       <div v-for="(day, dayIndex) in daysOfWeek"
            :key="day"
            class="border p-2">
-        <div class="font-bold">{{ day }}</div>
-        <div v-for="hour in hoursStore.hours"
-             :key="`${day}_${hour.id}`"
+        <div class="font-bold">{{ `${day} ${getMonthDay(dayIndex)} ${monthLabel}` }}</div>
+        <div v-for="hour in hoursOfTheDay(dayIndex)"
+             :key="`${hour.day}_${day}`"
              class="flex items-center justify-between mb-2">
           <span>{{ `${hour.start_at} - ${hour.end_at}` }}</span>
-          <button :class="{ 'bg-green-500': isAvailable(dayIndex, hour), 'bg-red-500': !isAvailable(dayIndex, hour) }"
+          <button :disabled="getAvailability(dayIndex, hour)?.users_id != usersStore.user.id"
+                  :class="{ 'bg-green-500': isAvailable(dayIndex, hour), 'bg-red-500': !isAvailable(dayIndex, hour) }"
                   @click="toggleAvailability(dayIndex, hour)"
                   class="p-2 rounded">
-            {{ isAvailable(dayIndex, hour) ? 'Available' : 'Not Available' }}
+            <span>{{ getAvailability(dayIndex, hour)?.user }}</span>
           </button>
         </div>
       </div>
     </div>
   </div>
 </template>
-<style>
-.btn {
-  @apply bg-blue-500 text-white px-4 py-2 rounded;
-}
-</style>

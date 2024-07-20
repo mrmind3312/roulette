@@ -12,6 +12,7 @@
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@pinia/nuxt": "^0.5.1",
+    "dayjs": "^1.11.12",
     "nuxt": "^3.12.3",
     "pinia": "^2.1.7",
     "vue": "latest"

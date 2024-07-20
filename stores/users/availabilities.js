@@ -25,6 +25,15 @@ export const useAvailabilitiesStore = defineStore('availabilities', {
         throw new Error(error.message)
       }
     },
+    async getAllAvailabilities(user_id) {
+      try {
+        const { data, error } = await apiService.get(`v1/users/${user_id}/availabilities/all`)
+        this.availabilities = data
+      } catch (error) {
+        console.log("🚀 ~ login ~ error:", error)
+        throw new Error(error.message)
+      }
+    },
     async setAvailability(user_id) {
       try {
         const { data, error } = await apiService.post(`v1/users/${user_id}/availabilities`, this.availability)
