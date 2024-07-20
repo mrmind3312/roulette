@@ -10,6 +10,7 @@ const hoursStore = useHoursStore();
 const availabilitiesStore = useAvailabilitiesStore();
 
 const currentWeek = ref(getCurrentWeek())
+const initalWeekNumber = getWeekNumber(currentWeek.value)
 const availability = ref({})
 
 const daysOfWeek = runtimeConfig.public.days
@@ -33,7 +34,13 @@ function getWeekNumber(date) {
 }
 
 function nextWeek() {
-  currentWeek.value.setDate(currentWeek.value.getDate() + 7)
+  currentWeek.value = new Date(currentWeek.value.setDate(currentWeek.value.getDate() + 7))
+}
+
+function previousWeek() {
+  if (initalWeekNumber != getWeekNumber(currentWeek.value)) {
+    currentWeek.value = new Date(currentWeek.value.setDate(currentWeek.value.getDate() - 7))
+  }
 }
 
 function getAvailability(day, hour) {
@@ -81,9 +88,11 @@ onMounted(() => {
 <template>
   <div class="container mx-auto p-4">
     <div class="flex justify-between mb-4">
-      <div>{{ formatWeekLabel(currentWeek) }}</div>
+      <strong>{{ formatWeekLabel(currentWeek) }}</strong>
       <button @click="nextWeek"
-              class="btn">Next Week</button>
+              class="btn">Siguiente Semana</button>
+      <button @click="previousWeek"
+              class="btn">Semana Anterior</button>
     </div>
     <div class="grid grid-cols-4 gap-4">
       <div v-for="(day, dayIndex) in daysOfWeek"
