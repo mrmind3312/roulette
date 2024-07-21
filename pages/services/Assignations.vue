@@ -99,6 +99,7 @@ async function toggleAvailability(day, hour) {
   availabilitiesStore.availability.month = currentWeek.value.getMonth()
   availabilitiesStore.availability.year = currentWeek.value.getFullYear()
   availabilitiesStore.availability.available = !availabilitiesStore.availability.available
+  availabilitiesStore.availability.services_id = null
 
   availabilitiesStore.toggleAvailability(usersStore.user.id)
 }
