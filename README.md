@@ -1,75 +1,110 @@
-# Nuxt 3 Minimal Starter
+# Documentation for Cloning and Running a Roulette Application
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Overview
 
-## Setup
+This guide provides step-by-step instructions for cloning and running a Nuxt.js application. Follow the instructions to set up the project on your local machine.
 
-Make sure to install the dependencies:
+## Prerequisites
+
+Ensure you have the following installed on your machine:
+- Node.js (version 18.x or later)
+- npm (version 10.x or later) or yarn (version 1.x or later)
+- Git
+
+## Steps
+
+### 1. Clone the Repository
+
+First, clone the repository from GitHub:
 
 ```bash
-# npm
+git clone https://github.com/mrmind3312/roulette.git
+```
+
+### 2. Navigate to the Project Directory
+
+Change to the project's directory:
+
+```bash
+cd roulette
+```
+
+### 3. Install Dependencies
+
+Install the project dependencies using npm or yarn:
+
+```bash
+# Using npm
 npm install
 
-# pnpm
-pnpm install
-
-# yarn
+# Using yarn
 yarn install
-
-# bun
-bun install
 ```
 
-## Development Server
+### 4. Create the `.env` File
 
-Start the development server on `http://localhost:3000`:
+Create a `.env` file in the root directory of the project with the following contents:
+
+```
+NUXT_PORT=5000
+NUXT_PUBLIC_API_URL=http://localhost:3000/api/
+```
+
+This file sets environment variables needed for the application to run.
+
+### 5. Run the Application
+
+Start the development server:
 
 ```bash
-# npm
+# Using npm
 npm run dev
 
-# pnpm
-pnpm run dev
-
-# yarn
+# Using yarn
 yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
+The application will start on port 5000 as specified in the `.env` file. You can access it at `http://localhost:5000`.
 
-Build the application for production:
+### Additional Information
 
-```bash
-# npm
-npm run build
+- To build the application for production, use the following command:
 
-# pnpm
-pnpm run build
+  ```bash
+  # Using npm
+  npm run build
 
-# yarn
-yarn build
+  # Using yarn
+  yarn build
+  ```
 
-# bun
-bun run build
-```
+- To start the production server, use the following command:
 
-Locally preview production build:
+  ```bash
+  # Using npm
+  npm run start
 
-```bash
-# npm
-npm run preview
+  # Using yarn
+  yarn start
+  ```
 
-# pnpm
-pnpm run preview
+- For more detailed information on using Nuxt.js, refer to the [Nuxt.js Documentation](https://nuxtjs.org/docs/2.x/get-started/installation).
 
-# yarn
-yarn preview
+## Application Features
 
-# bun
-bun run preview
-```
+The purpose of this application is to manage user availabilities and auto-assign them based on service times and user availability by week, day of the week, and hour. Internally, it considers both the month and the day of the month. The key features of this application include:
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+- **User Availability Management**: Users can define their availability by specifying the days of the week and hours they are available.
+- **Service Time Management**: Services can be defined with specific times, and the application will match these times with user availability.
+- **Auto-Assignment**: The application automatically assigns users to services based on their availability and the defined service times.
+- **Time Consideration**: The system takes into account both the month and the specific day of the month when managing availability and assignments.
+
+By leveraging these features, the application ensures efficient and optimized scheduling of users for various services.
+
+## Conclusion
+
+By following these steps, you should be able to clone and run the Nuxt.js application successfully. If you encounter any issues, refer to the project's README file or the Nuxt.js documentation for further assistance.
+
+---
+
+Feel free to reach out if you have any questions or need further assistance. Happy coding!
