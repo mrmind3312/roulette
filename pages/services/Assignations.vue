@@ -120,7 +120,7 @@ onMounted(() => {
 </script>
 <template>
   <div>
-    <header class="flex justify-between items-center py-4">
+    <header class="flex justify-evenly items-center py-4">
       <div class="flex items-center space-x-4">
         <label class="block">
           <strong class="text-sm text-gray-600">Servicio:</strong>
@@ -149,17 +149,23 @@ onMounted(() => {
     <div class="grid grid-cols-4 gap-4">
       <div v-for="(day, dayIndex) in daysOfWeek"
            :key="day"
-           class="border p-2">
-        <div class="font-bold">{{ `${day} ${getMonthDay(dayIndex)} ${monthLabel}` }}</div>
+           class="border p-2 bg-blue-200 rounded-md">
+        <div class="font-bold text-center">{{ `${day} ${getMonthDay(dayIndex)} ${monthLabel}` }}</div>
         <div v-for="hour in hoursOfTheDay(dayIndex)"
              :key="`${hour.day}_${day}`"
-             class="flex items-center justify-between mb-2">
-          <span>{{ `${hour.start_at} - ${hour.end_at}` }}</span>
+             class="flex items-center justify-between border-b-2 border-b-slate-100 p-2">
+          <strong
+                  :class="{ 'bg-green-200': isAvailable(dayIndex, hour), 'bg-red-200': !isAvailable(dayIndex, hour), 'p-2 rounded-lg': true }">
+            {{ `${hour.start_at} - ${hour.end_at}` }}
+          </strong>
           <button :disabled="getAvailability(dayIndex, hour)?.users_id != usersStore.user.id"
-                  :class="{ 'bg-green-500': isAvailable(dayIndex, hour), 'bg-red-500': !isAvailable(dayIndex, hour) }"
+                  :class="{ 'bg-red-500': !isAvailable(dayIndex, hour), 'text-white flex items-center justify-center': true }"
+                  :style="isAvailable(dayIndex, hour) ? `background-color: ${getAvailability(dayIndex, hour)?.color};` : ''"
                   @click="toggleAvailability(dayIndex, hour)"
                   class="p-2 rounded">
-            <span>{{ getAvailability(dayIndex, hour)?.user }}</span>
+            <Icon v-if="!isAvailable(dayIndex, hour)"
+                  name="line-md:alert" size="1.5em"/>
+            <strong v-if="isAvailable(dayIndex, hour)">{{ getAvailability(dayIndex, hour).user }}</strong>
           </button>
         </div>
       </div>
