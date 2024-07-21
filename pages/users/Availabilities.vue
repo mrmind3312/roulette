@@ -37,9 +37,9 @@ function nextWeek() {
 }
 
 function previousWeek() {
-  if (initalWeekNumber != getWeekNumber(currentWeek.value)) {
-    currentWeek.value = new Date(currentWeek.value.setDate(currentWeek.value.getDate() - 7))
-  }
+  // if (initalWeekNumber != getWeekNumber(currentWeek.value)) {
+  currentWeek.value = new Date(currentWeek.value.setDate(currentWeek.value.getDate() - 7))
+  // }
 }
 
 function getAvailability(day, hour) {
@@ -74,6 +74,10 @@ async function toggleAvailability(day, hour) {
   availabilitiesStore.availability.month = currentWeek.value.getMonth()
   availabilitiesStore.availability.year = currentWeek.value.getFullYear()
   availabilitiesStore.availability.available = !availabilitiesStore.availability.available
+
+  if (!availabilitiesStore.availability.available) {
+    availabilitiesStore.availability.services_id = null
+  }
 
   availabilitiesStore.toggleAvailability(usersStore.user.id)
 }
