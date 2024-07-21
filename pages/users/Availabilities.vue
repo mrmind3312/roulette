@@ -37,9 +37,9 @@ function nextWeek() {
 }
 
 function previousWeek() {
-  // if (initalWeekNumber != getWeekNumber(currentWeek.value)) {
-  currentWeek.value = new Date(currentWeek.value.setDate(currentWeek.value.getDate() - 7))
-  // }
+  if (initalWeekNumber != getWeekNumber(currentWeek.value)) {
+    currentWeek.value = new Date(currentWeek.value.setDate(currentWeek.value.getDate() - 7))
+  }
 }
 
 function getAvailability(day, hour) {
@@ -51,35 +51,6 @@ function getAvailability(day, hour) {
   })
 
   return availability
-}
-
-function isAvailable(day, hour) {
-  const availability = getAvailability(day, hour)
-
-  return availability ? availability.available : false
-}
-
-async function toggleAvailability(day, hour) {
-  const availability = getAvailability(day, hour)
-
-  if (availability) {
-    availabilitiesStore.availability = availability
-  } else {
-    availabilitiesStore.availability = {}
-  }
-
-  availabilitiesStore.availability.catalog_hours_id = hour.id
-  availabilitiesStore.availability.day = day
-  availabilitiesStore.availability.week = getWeekNumber(currentWeek.value)
-  availabilitiesStore.availability.month = currentWeek.value.getMonth()
-  availabilitiesStore.availability.year = currentWeek.value.getFullYear()
-  availabilitiesStore.availability.available = !availabilitiesStore.availability.available
-
-  if (!availabilitiesStore.availability.available) {
-    availabilitiesStore.availability.services_id = null
-  }
-
-  availabilitiesStore.toggleAvailability(usersStore.user.id)
 }
 
 onMounted(() => {
@@ -102,16 +73,12 @@ onMounted(() => {
            :key="day"
            class="border p-2">
         <div class="font-bold">{{ day }}</div>
-        <div v-for="hour in hoursStore.hours"
-             :key="`${day}_${hour.id}`"
-             class="flex items-center justify-between mb-2">
-          <span>{{ `${hour.start_at} - ${hour.end_at}` }}</span>
-          <button :class="{ 'bg-green-500': isAvailable(dayIndex, hour), 'bg-red-500': !isAvailable(dayIndex, hour) }"
-                  @click="toggleAvailability(dayIndex, hour)"
-                  class="p-2 rounded">
-            {{ isAvailable(dayIndex, hour) ? 'Available' : 'Not Available' }}
-          </button>
-        </div>
+        <AvailabilityRow v-for="hour in hoursStore.hours"
+                         :key="`${day}_${hour.id}`"
+                         :hour="hour"
+                         :day="dayIndex"
+                         :availability="getAvailability(dayIndex, hour)"
+                         :current-week="currentWeek" />
       </div>
     </div>
   </div>
