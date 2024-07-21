@@ -11,7 +11,7 @@ export const useHoursStore = defineStore('hours', {
     async getHours() {
       try {
         const { data, error } = await apiService.get('v1/catalog/hours')
-        this.hours = data.value;
+        this.hours = data;
       } catch (error) {
         console.log("🚀 ~ login ~ error:", error)
         throw new Error(error.message)

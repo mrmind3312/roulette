@@ -38,7 +38,7 @@ export const useAvailabilitiesStore = defineStore('availabilities', {
       try {
         const { data, error } = await apiService.post(`v1/users/${user_id}/availabilities`, this.availability)
 
-        this.availabilities.push(data.value)
+        this.availabilities.push(data)
       } catch (error) {
         console.log("🚀 ~ login ~ error:", error)
         throw new Error(error.message)
@@ -49,7 +49,7 @@ export const useAvailabilitiesStore = defineStore('availabilities', {
       try {
         const { data, error } = await apiService.put(`v1/users/${user_id}/availabilities/${this.availability.id}`, this.availability)
 
-        this.availabilities = this.availabilities.map(availability => availability.id === data.value.id ? data.value : availability);
+        this.availabilities = this.availabilities.map(availability => availability.id === data.id ? data : availability);
       } catch (error) {
         console.log("🚀 ~ login ~ error:", error)
         throw new Error(error.message)

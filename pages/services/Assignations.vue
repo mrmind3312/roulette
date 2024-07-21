@@ -156,10 +156,11 @@ onMounted(() => {
              class="flex items-center justify-between mb-2">
           <span>{{ `${hour.start_at} - ${hour.end_at}` }}</span>
           <button :disabled="getAvailability(dayIndex, hour)?.users_id != usersStore.user.id"
-                  :class="{ 'bg-green-500': isAvailable(dayIndex, hour), 'bg-red-500': !isAvailable(dayIndex, hour) }"
+                  :class="{ 'bg-red-500': !isAvailable(dayIndex, hour), 'text-white': true }"
+                  :style="isAvailable(dayIndex, hour) ? `background-color: ${getAvailability(dayIndex, hour)?.color};` : ''"
                   @click="toggleAvailability(dayIndex, hour)"
                   class="p-2 rounded">
-            <span>{{ getAvailability(dayIndex, hour)?.user }}</span>
+            <strong>{{ getAvailability(dayIndex, hour)?.user }}</strong>
           </button>
         </div>
       </div>

@@ -11,7 +11,7 @@ export const useServicesStore = defineStore('services', {
     async getServices() {
       try {
         const { data, error } = await apiService.get('v1/services')
-        this.services = data.value;
+        this.services = data;
         this.service = this.services[0];
       } catch (error) {
         console.log("🚀 ~ login ~ error:", error)

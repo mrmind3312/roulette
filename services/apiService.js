@@ -15,44 +15,56 @@ const getBaseUrl = () => {
 
 export const apiService = {
   get: async (url, params = {}) => {
-    const { data, error } = await useFetch(`${getBaseUrl()}${url}`, {
-      method: 'GET',
-      params,
-      headers: getHeaders(),
-    });
-
-    return { data, error };
+    try {
+      const data = await $fetch(`${getBaseUrl()}${url}`, {
+        method: 'GET',
+        params,
+        headers: getHeaders(),
+      });
+      return { data, error: null };
+    } catch (error) {
+      return { data: null, error };
+    }
   },
   post: async (url, body) => {
-    const { data, error } = await useFetch(`${getBaseUrl()}${url}`, {
-      method: 'POST',
-      body,
-      headers: getHeaders(),
-      onResponse(context) {
-        const token = context.response.headers.get('authorization')
-        if (token) {
-          setToken(token)
+    try {
+      const data = await $fetch(`${getBaseUrl()}${url}`, {
+        method: 'POST',
+        body,
+        headers: getHeaders(),
+        onResponse(context) {
+          const token = context.response.headers.get('authorization');
+          if (token) {
+            setToken(token);
+          }
         }
-      }
-    });
-
-    return { data, error };
+      });
+      return { data, error: null };
+    } catch (error) {
+      return { data: null, error };
+    }
   },
   put: async (url, body) => {
-    const { data, error } = await useFetch(`${getBaseUrl()}${url}`, {
-      method: 'PUT',
-      body,
-      headers: getHeaders(),
-    });
-
-    return { data, error };
+    try {
+      const data = await $fetch(`${getBaseUrl()}${url}`, {
+        method: 'PUT',
+        body,
+        headers: getHeaders(),
+      });
+      return { data, error: null };
+    } catch (error) {
+      return { data: null, error };
+    }
   },
   delete: async (url) => {
-    const { data, error } = await useFetch(`${getBaseUrl()}${url}`, {
-      method: 'DELETE',
-      headers: getHeaders(),
-    });
-
-    return { data, error };
+    try {
+      const data = await $fetch(`${getBaseUrl()}${url}`, {
+        method: 'DELETE',
+        headers: getHeaders(),
+      });
+      return { data, error: null };
+    } catch (error) {
+      return { data: null, error };
+    }
   },
 };
