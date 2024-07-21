@@ -1,10 +1,17 @@
 <script setup>
 import { useUsersStore } from '~/stores/users'
+import { useAvailabilitiesStore } from '~/stores/users/availabilities'
+import { useServicesStore } from '~/stores/services'
+
 const usersStore = useUsersStore();
+const availabilitiesStore = useAvailabilitiesStore();
+const servicesStore = useServicesStore();
 
 const handleLogout = async () => {
+  availabilitiesStore.availabilities = []
+  servicesStore.services = []
   await usersStore.logout();
-  await navigateTo('/')
+  location.href = '/'
 }
 
 </script>

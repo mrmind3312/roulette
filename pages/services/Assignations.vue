@@ -101,7 +101,9 @@ async function toggleAvailability(day, hour) {
   availabilitiesStore.availability.available = !availabilitiesStore.availability.available
   availabilitiesStore.availability.services_id = null
 
-  availabilitiesStore.toggleAvailability(usersStore.user.id)
+  await availabilitiesStore.toggleAvailability(usersStore.user.id)
+
+  availabilitiesStore.getAllAvailabilities(usersStore.user.id)
 }
 
 onMounted(() => {

@@ -47,7 +47,7 @@ export const useAvailabilitiesStore = defineStore('availabilities', {
     },
     async updateAvailability(user_id) {
       try {
-        const { data, error } = await apiService.post(`v1/users/${user_id}/availabilities/${this.availability.id}`, this.availability)
+        const { data, error } = await apiService.put(`v1/users/${user_id}/availabilities/${this.availability.id}`, this.availability)
 
         this.availabilities = this.availabilities.map(availability => availability.id === data.value.id ? data.value : availability);
       } catch (error) {
