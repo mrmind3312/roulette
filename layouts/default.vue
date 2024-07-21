@@ -1,3 +1,13 @@
+<script setup>
+import { useUsersStore } from '~/stores/users'
+const usersStore = useUsersStore();
+
+const handleLogout = async () => {
+  await usersStore.logout();
+  await navigateTo('/')
+}
+
+</script>
 <template>
   <div>
     <nav class="flex justify-between items-center py-4">
@@ -15,10 +25,15 @@
             <nuxt-link to="/services/assignations"
                        class="text-gray-600 hover:text-gray-900">Assignations</nuxt-link>
           </li>
+          <li class="mr-6"
+              v-if="usersStore.user">
+            <button @click="handleLogout"
+                    class="text-gray-600 hover:text-gray-900">Logout</button>
+          </li>
         </ul>
       </div>
     </nav>
-    
+
     <slot />
   </div>
 </template>
